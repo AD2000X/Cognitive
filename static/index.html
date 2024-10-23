@@ -5,131 +5,177 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cognitive Structure Dashboard</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script>
-    console.log("Plotly version:", Plotly.version);
-    </script>
     <style>
-        .slider-container {
-            margin-bottom: 10px;
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
         }
-        #plot {
-            width: 100%;
-            height: 500px;
+        .slider-container {
+            margin: 10px 0;
+        }
+        .slider-container label {
+            display: inline-block;
+            width: 100px;
+        }
+        .slider-container input {
+            width: 200px;
+        }
+        .slider-container span {
+            margin-left: 10px;
+        }
+        .login-section {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #updateBtn {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #updateBtn:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
     <h1>Cognitive Structure Dashboard</h1>
-
-    <div class="slider-container">
-        <label for="age">Age:</label>
-        <input type="range" id="age" min="18" max="80" value="64">
-        <span id="ageValue">64</span>
+    
+    <div class="login-section" id="loginSection">
+        <button onclick="window.location.href='/auth'">Login with Google</button>
     </div>
 
-    <div class="slider-container">
-        <label for="iq">IQ:</label>
-        <input type="range" id="iq" min="70" max="130" value="109">
-        <span id="iqValue">109</span>
+    <div id="dashboard" style="display:none;">
+        <div class="slider-container">
+            <label for="age">Age:</label>
+            <input type="range" id="age" min="18" max="80" value="64">
+            <span id="ageValue">64</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="iq">IQ:</label>
+            <input type="range" id="iq" min="70" max="130" value="109">
+            <span id="iqValue">109</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="pl">PL:</label>
+            <input type="range" id="pl" min="0" max="100" value="50">
+            <span id="plValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="pr">PR:</label>
+            <input type="range" id="pr" min="0" max="100" value="50">
+            <span id="prValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="se">SE:</label>
+            <input type="range" id="se" min="0" max="100" value="50">
+            <span id="seValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="ct">CT:</label>
+            <input type="range" id="ct" min="0" max="100" value="50">
+            <span id="ctValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="at">AT:</label>
+            <input type="range" id="at" min="0" max="100" value="50">
+            <span id="atValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="abpm">ABPM:</label>
+            <input type="range" id="abpm" min="0" max="100" value="50">
+            <span id="abpmValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="ebpm">EBPM:</label>
+            <input type="range" id="ebpm" min="0" max="100" value="50">
+            <span id="ebpmValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="tbpm">TBPM:</label>
+            <input type="range" id="tbpm" min="0" max="100" value="50">
+            <span id="tbpmValue">50</span>
+        </div>
+
+        <div class="slider-container">
+            <label for="av">AV:</label>
+            <input type="range" id="av" min="0" max="100" value="50">
+            <span id="avValue">50</span>
+        </div>
+
+        <button id="updateBtn">Update Chart</button>
+
+        <div id="plot"></div>
     </div>
-
-    <div class="slider-container">
-        <label for="PL">PL:</label>
-        <input type="number" id="PL" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="PR">PR:</label>
-        <input type="number" id="PR" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="SE">SE:</label>
-        <input type="number" id="SE" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="CT">CT:</label>
-        <input type="number" id="CT" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="AT">AT:</label>
-        <input type="number" id="AT" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="ABPM">ABPM:</label>
-        <input type="number" id="ABPM" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="EBPM">EBPM:</label>
-        <input type="number" id="EBPM" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="TBPM">TBPM:</label>
-        <input type="number" id="TBPM" value="100">
-    </div>
-
-    <div class="slider-container">
-        <label for="AV">AV:</label>
-        <input type="number" id="AV" value="100">
-    </div>
-
-    <button onclick="updateGraph()">Update Chart</button>
-
-    <div id="plot"></div>
 
     <script>
-    function updateGraph() {
-        const data = {
-            age: document.getElementById('age').value,
-            iq: document.getElementById('iq').value,
-            PL: document.getElementById('PL').value,
-            PR: document.getElementById('PR').value,
-            SE: document.getElementById('SE').value,
-            CT: document.getElementById('CT').value,
-            AT: document.getElementById('AT').value,
-            ABPM: document.getElementById('ABPM').value,
-            EBPM: document.getElementById('EBPM').value,
-            TBPM: document.getElementById('TBPM').value,
-            AV: document.getElementById('AV').value
-        };
+        // Update value displays for all sliders
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            slider.addEventListener('input', function() {
+                document.getElementById(this.id + 'Value').textContent = this.value;
+            });
+        });
 
-        fetch('/process', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Received data:", data);
-            if (data.plot_data && data.layout) {
-                console.log("Attempting to plot");
-                Plotly.newPlot('plot', data.plot_data, data.layout)
-                    .then(() => console.log("Plot successful"))
-                    .catch(err => console.error("Plot error:", err));
-            } else {
-                console.error("Invalid data structure received");
-            }
-        })
-        .catch(error => console.error('Fetch error:', error));
-    }
+        // Check login status when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLoginStatus();
+        });
 
-    // Update slider value display
-    document.getElementById('age').oninput = function() {
-        document.getElementById('ageValue').textContent = this.value;
-    }
-    document.getElementById('iq').oninput = function() {
-        document.getElementById('iqValue').textContent = this.value;
-    }
+        function checkLoginStatus() {
+            fetch('/auth/status')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.logged_in) {
+                        document.getElementById('loginSection').style.display = 'none';
+                        document.getElementById('dashboard').style.display = 'block';
+                    }
+                });
+        }
 
-    // Load chart initially
-    updateGraph();
+        document.getElementById('updateBtn').addEventListener('click', function() {
+            const data = {
+                age: parseInt(document.getElementById('age').value),
+                iq: parseInt(document.getElementById('iq').value),
+                PL: parseInt(document.getElementById('pl').value),
+                PR: parseInt(document.getElementById('pr').value),
+                SE: parseInt(document.getElementById('se').value),
+                CT: parseInt(document.getElementById('ct').value),
+                AT: parseInt(document.getElementById('at').value),
+                ABPM: parseInt(document.getElementById('abpm').value),
+                EBPM: parseInt(document.getElementById('ebpm').value),
+                TBPM: parseInt(document.getElementById('tbpm').value),
+                AV: parseInt(document.getElementById('av').value)
+            };
+
+            fetch('/process', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                Plotly.newPlot('plot', result.plot_data, result.layout);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
     </script>
 </body>
 </html>

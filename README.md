@@ -83,6 +83,7 @@ vercel
 ├── requirements.txt
 ├── vercel.json
 ├── .env
+└── .gitignore
 └── README.md
 ```
 
